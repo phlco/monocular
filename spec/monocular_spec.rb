@@ -48,4 +48,18 @@ describe Monocular do
       end
     end
   end
+  describe "#annotate" do
+    context "when line contains gem" do
+      it "adds commented description" do
+        line = monocular.annotate("gem 'foreman'")
+        expect( line ).to eq "# Process manager for applications with multiple components                     \ngem 'foreman'\n"
+      end
+    end
+    context "when line doesn't contain gem" do
+      it "leaves line alone" do
+        line = monocular.annotate("ruby '2.1.0")
+        expect( line ).to eq "ruby '2.1.0"
+      end
+    end
+  end
 end

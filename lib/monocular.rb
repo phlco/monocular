@@ -33,13 +33,15 @@ module Monocular
     end
 
     def annotate_gems
-      gem_lines.map! do |line|
-        gem_name = extract_name(line)
-        if gem_name
-          [word_wrap(description_from(specs_for(gem_name))), line, ''].join("\n")
-        else
-          line
-        end
+      gem_lines.map! { |line| annotate(line) }
+    end
+
+    def annotate(line)
+      gem_name = extract_name(line)
+      if gem_name
+        [word_wrap(description_from(specs_for(gem_name))), line, ''].join("\n")
+      else
+        line
       end
     end
 
