@@ -3,22 +3,23 @@ require 'yaml'
 require 'date'
 
 module Monocular
+
+  def self.annotate!
+    Monocular.new do |m|
+      m.backup_gemfile
+      m.parse_gemfile
+      m.annotate_gems
+      m.write_to_gemfile
+    end
+    puts "Done"
+  end
+
   class Monocular
     attr_accessor :gem_lines
 
     def initialize
       @gem_lines = []
-    end
-
-    def self.annotate!
-      puts "Annotating Gemfile"
-      new do |m|
-        m.backup_gemfile
-        m.parse_gemfile
-        m.annotate_gems
-        m.write_to_gemfile
-      end
-      puts "Done"
+      self
     end
 
     def backup_gemfile
@@ -86,5 +87,3 @@ module Monocular
     end
   end
 end
-
-Monocular::Monocular.annotate!
