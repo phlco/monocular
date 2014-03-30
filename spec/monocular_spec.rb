@@ -2,62 +2,38 @@ require 'spec_helper'
 require 'monocular'
 
 describe Monocular do
-
-  describe "specs_for" do
-    it "returns Gem specification" do
-      spec = Monocular.specs_for('bundler')
-      expect( spec ).to be_instance_of Gem::Specification
-    end
-    it "returns nil when no gem can be found" do
-      spec = Monocular.specs_for('the_undiscovered_country_of_fake_gems')
-      expect( spec ).to be_nil
+  let(:monocular) { Monocular::Moncular.new }
+  describe '#extract_name' do
+    it 'returns the name of a gem from a line' do
+      line = "gem 'ruby-openid', :git => 'git://github.com/kendagriff/ruby-openid.git', :ref => '79beaa419d4754e787757f2545331509419e222e'"
+      monocular.extract_name(line)
+      expect( name ).to eq 'ruby-openid'
     end
   end
-
-  describe "read_name" do
-    it "returns a gem's name" do
-      line = "gem 'rack', '~>1.1'"
-      name = Monocular.read_name(line)
-      expect( name ).to eq 'rack'
-    end
-    it "ignores lines without gems" do
-      line = "source 'https://rubygems.org'"
-      name = Monocular.read_name(line)
-      expect( name ).to be_nil
+  describe '#specs_for' do
+    it 'returns a Gemfile Specification' do
+      specs = monocular.specs_for('ruby-openid')
+      expect( specs ).to be_an_instance_of Gem::Specification
     end
   end
-
-  it "ignores commented lines" do
-  end
-
-  describe "description_for" do
-    context("when summary or description") do
-      it "gets a description" do
-        description = Monocular.description_for('rack')
-        expect( description ).to match "minimal, modular and adaptable interface"
-      end
+  describe '#description_from' do
+    context('When Gem has a description') do
+      gem_spec = double('Gem::Specificiation', :description => 'Sass adapter for the Rails asset pipeline.')
+      desc = monocular.description_from(gem_spec)
+      expect( desc ).to eq 'Sass adapter for the Rails asset pipeline.'
     end
-    context("without summary or description") do
-      it "returns no description" do
-        description = Monocular.description_for('the_undiscovered_country_of_fake_gems')
-        expect( description ).to match "No Description Available"
-      end
+    context('when Gem only has a summary') do
+      gem_spec = double('Gem::Specificiation', :description => '', :summary => 'Sass adapter for the Rails asset pipeline.')
+      desc = monocular.description_from(gem_spec)
+      expect( desc ).to eq 'Sass adapter for the Rails asset pipeline.'
+    end
+    context('when neither') do
+      desc = monocular.description_from(gem_spec)
+      expect( desc ).to eq 'No Description Available'
     end
   end
-  describe "word_wrap" do
-    it "formats lines with comments" do
-      pre_format = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      post_format = "# Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor \n# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \n# exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute \n# irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n# pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia \n# deserunt mollit anim id est laborum."
-      wrapped_text = Monocular.word_wrap(pre_format)
-      wrapped_text.split("\n").each do |line|
-        expect( line.length ).to be < 100
-      end
-    end
-    it "formats lines over 80 characters" do
-pre_format = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-post_format = "# Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor \n# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \n# exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute \n# irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n# pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia \n# deserunt mollit anim id est laborum."
-      wrapped_text = Monocular.word_wrap(pre_format)
-      expect( wrapped_text ).to eq post_format
+  describe '#word_wrap' do
+    it 'formats text in 80 character lines' do
     end
   end
 end
