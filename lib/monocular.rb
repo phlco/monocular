@@ -1,6 +1,7 @@
 require 'monocular/version'
 require 'yaml'
 require 'date'
+require 'pry'
 
 module Monocular
   class Monocular
@@ -54,16 +55,20 @@ module Monocular
     end
 
     def specs_for(gem_name)
+      binding.pry if gem_name == "ruby-openid"
       spec = YAML.load(`gem specification #{gem_name}`)
-      return spec if spec
-      Gem.latest_spec_for(gem_name)
+      if spec
+        return spec
+      else
+        return Gem.latest_spec_for(gem_name)
+      end
     end
 
     def description_from(gem_spec)
       print "."
-      if gem_spec.respond_to?(:description) && gem_spec.description && gem_spec.description.empty?
+      if gem_spec.respond_to?(:description) && gem_spec.description
         gem_spec.description
-      elsif gem_spec.respond_to?(:summary) && gem_spec.summary && gem_spec.summary.empty?
+      elsif gem_spec.respond_to?(:summary) && gem_spec.summary
         gem_spec.summary
       else
         'No Description Available'
