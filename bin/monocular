@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'monocular'
 
 if File.exists?("Gemfile")
