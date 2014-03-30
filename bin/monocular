@@ -1,0 +1,7 @@
+require 'monocular'
+
+if File.exists?("Gemfile")
+  Monocular.annotate!
+else
+  puts "please run from Rails root directory"
+end
