@@ -6,20 +6,42 @@ Annotate's Gemfiles with Gem descriptions or summaries
 
 Add this line to your application's Gemfile:
 
-    gem 'monocular'
+```ruby
+gem 'monocular'
+```
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install monocular
+```bash
+$ gem install monocular
+```
 
 ## Usage
 
-    # In the same directory as a Gemfile
-    $ monocular
+```bash
+# In the same directory as a Gemfile
+$ monocular
+```
+
+### Example Output
+
+```ruby
+# XPath is a Ruby DSL for generating XPath expressions
+gem 'xpath'
+
+# Clean ruby syntax for writing and deploying cron jobs.
+gem 'whenever', :require => false
+
+# Quickly setup backbone.js for use with rails 3.1. Generators are provided to quickly
+# get started.
+gem 'rails-backbone'
+```
 
 ## Contributing
 
