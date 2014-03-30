@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'monocular'
 
 describe Monocular do
 
@@ -38,23 +39,25 @@ describe Monocular do
     end
     context("without summary or description") do
       it "returns no description" do
-        description = Monocular.description_for('rack')
-        expect( description ).to match 'No Description Available'
+        description = Monocular.description_for('the_undiscovered_country_of_fake_gems')
+        expect( description ).to match "No Description Available"
       end
     end
   end
   describe "word_wrap" do
     it "formats lines with comments" do
-      text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      wrapped_text = Monocular.word_wrap(text)
+      pre_format = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      post_format = "# Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor \n# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \n# exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute \n# irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n# pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia \n# deserunt mollit anim id est laborum."
+      wrapped_text = Monocular.word_wrap(pre_format)
       wrapped_text.split("\n").each do |line|
         expect( line.length ).to be < 100
       end
     end
     it "formats lines over 80 characters" do
-      text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      wrapped_text = Monocular.word_wrap(text)
-      expect( wrapped_text ).to match "\n# "
+pre_format = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+post_format = "# Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor \n# incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud \n# exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute \n# irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n# pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia \n# deserunt mollit anim id est laborum."
+      wrapped_text = Monocular.word_wrap(pre_format)
+      expect( wrapped_text ).to eq post_format
     end
   end
 end
