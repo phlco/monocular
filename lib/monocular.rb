@@ -3,23 +3,19 @@ require 'yaml'
 require 'date'
 
 module Monocular
-
-  def self.annotate!
-    Monocular.new do |m|
-      m.backup_gemfile
-      m.parse_gemfile
-      m.annotate_gems
-      m.write_to_gemfile
-    end
-    puts "Done"
-  end
-
   class Monocular
     attr_accessor :gem_lines
 
     def initialize
       @gem_lines = []
-      self
+    end
+
+    def self.annotate!
+      worker = self.new
+      worker.backup_gemfile
+      worker.parse_gemfile
+      worker.annotate_gems
+      worker.write_to_gemfile
     end
 
     def backup_gemfile
@@ -55,7 +51,6 @@ module Monocular
 
     def extract_name(line)
       line.scan(/gem '(.*?)',?/).flatten.first
-      print "."
     end
 
     def specs_for(gem_name)
@@ -65,9 +60,10 @@ module Monocular
     end
 
     def description_from(gem_spec)
-      if gem_spec.respond_to?(:description) && gem_spec.description
+      print "."
+      if gem_spec.respond_to?(:description) && gem_spec.description && gem_spec.description.empty?
         gem_spec.description
-      elsif gem_spec.respond_to?(:summary) && gem_spec.summary
+      elsif gem_spec.respond_to?(:summary) && gem_spec.summary && gem_spec.summary.empty?
         gem_spec.summary
       else
         'No Description Available'
