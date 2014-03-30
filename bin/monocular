@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require 'monocular'
 
-if File.exists?("Gemfile")
-  puts "Annotating Gemfile"
+if File.exist?('Gemfile')
+  puts 'Annotating Gemfile'
   Monocular.annotate!
 else
-  puts "please run from Rails root directory"
+  puts 'Please run from Rails root directory'
 end

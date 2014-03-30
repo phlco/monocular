@@ -4,7 +4,6 @@ require 'date'
 
 module Monocular
   class << self
-
     # Gem specifications are read in as YAML
     def specs_for(gem_name)
       spec = YAML.load(`gem specification #{gem_name}`)
@@ -19,23 +18,21 @@ module Monocular
       elsif gem_spec.respond_to?(:summary) && gem_spec.summary
         gem_spec.summary
       else
-        "No Description Available"
+        'No Description Available'
       end
     end
 
     # limit lines to 80 characters
     def word_wrap(description)
-      description.gsub!(/\n/, " ")
+      # split on new line or space
+      words = description.split(/[\n|\s]/)
       lines = []
-      words = description.split(" ")
       while words.any?
-        line = "# "
-        until line.size >= 80
-          line << "#{words.shift} "
-        end
+        line = '# '
+        line << "#{words.shift} " until line.size >= 80
         lines << line
       end
-      lines.join("\n")
+      lines.join('\n')
     end
 
     # form the commented out describe block
@@ -47,32 +44,36 @@ module Monocular
 
     # annotate the gem file with title, description and gem
     def annotate(line)
-      gem_name = line.scan(/gem '(.*?)',?/).flatten.first
+      gem_name = read_name(line)
       if gem_name
-        [ describe(gem_name), line, "" ].join("\n")
+        [describe(gem_name), line, ''].join('\n')
       else
         line
       end
     end
 
+    # parses name from line in Gemfile
+    def read_name(line)
+      line.scan(/gem '(.*?)',?/).flatten.first
+    end
+
     def annotate!
       # backup gemfile
-      system("cp Gemfile Gemfile.bak")
+      system('cp Gemfile Gemfile.bak')
       gem_lines = []
-      File.read("Gemfile").each_line do |line|
+      File.read('Gemfile').each_line do |line|
         # Skip commented lines
-        next if line.start_with?("#")
+        next if line.start_with?('#')
         # annotate gem and add to lines
         gem_lines << annotate(line)
       end
       # write to gemfile
-      File.open("Gemfile", "w+") do |f|
-        f.puts("# == Annotated on #{Date.today.to_s} ==")
+      File.open('Gemfile', 'w+') do |f|
+        f.puts("# == Annotated on #{Date.today} ==")
         gem_lines.each do |line|
           f.puts(line)
         end
       end
     end
-
   end
 end
