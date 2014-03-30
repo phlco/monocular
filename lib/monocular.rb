@@ -49,7 +49,7 @@ module Monocular
     def annotate(line)
       gem_name = line.scan(/gem '(.*?)',?/).flatten.first
       if gem_name
-        [ describe(gem_name), line ].join("\n")
+        [ describe(gem_name), line, "" ].join("\n")
       else
         line
       end

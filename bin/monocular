@@ -2,6 +2,7 @@
 require 'monocular'
 
 if File.exists?("Gemfile")
+  puts "Annotating Gemfile"
   Monocular.annotate!
 else
   puts "please run from Rails root directory"

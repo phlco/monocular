@@ -1,6 +1,6 @@
 # Monocular
 
-TODO: Write a gem description
+Annotate's Gemfiles with Gem descriptions or summaries
 
 ## Installation
 
@@ -18,7 +18,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    # In the same directory as a Gemfile
+    $ monocular
 
 ## Contributing
 
